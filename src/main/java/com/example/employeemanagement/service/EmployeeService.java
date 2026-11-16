@@ -24,7 +24,7 @@ public class EmployeeService {
     public List<Employee> findAll(String department) {
         return employees.values().stream()
                 .filter(employee -> department == null || department.isBlank()
-                        || employee.department().equalsIgnoreCase(department.trim()))
+                        || employee.department().equalsIgnoreCase(utilityService.normalizeName(department)))
                 .sorted(Comparator.comparing(Employee::id))
                 .toList();
     }
