@@ -2,47 +2,50 @@ package com.example.employeemanagement.service;
 
 import com.example.employeemanagement.dto.CreateEmployeeRequest;
 import com.example.employeemanagement.model.Employee;
+import com.example.employeemanagement.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class EmployeeService {
-    private final ConcurrentHashMap<Long, Employee> employees = new ConcurrentHashMap<>();
-    private final AtomicLong idSequence = new AtomicLong();
+
+    private final EmployeeRepository employeeRepository;
     private final EmployeeCodeGenerator codeGenerator;
     private final UtilityService utilityService;
 
-    public EmployeeService(EmployeeCodeGenerator codeGenerator, UtilityService utilityService) {
+    public EmployeeService(EmployeeRepository employeeRepository,
+                           EmployeeCodeGenerator codeGenerator,
+                           UtilityService utilityService) {
+        this.employeeRepository = employeeRepository;
         this.codeGenerator = codeGenerator;
         this.utilityService = utilityService;
     }
 
     public List<Employee> findAll(String department) {
-        return employees.values().stream()
-                .filter(employee -> department == null || department.isBlank()
-                        || employee.department().equalsIgnoreCase(department.trim()))
-                .sorted(Comparator.comparing(Employee::id))
+        List<Employee> employees;
+        if (department == null || department.isBlank()) {
+            employees = employeeRepository.findAll();
+        } else {
+            employees = employeeRepository.findByDepartmentIgnoreCase(department.trim());
+        }
+        return employees.stream()
+                .sorted(Comparator.comparing(Employee::getId))
                 .toList();
     }
 
     public Employee findById(long id) {
-        return employees.get(id);
+        return employeeRepository.findById(id).orElse(null);
     }
 
     public Employee create(CreateEmployeeRequest request) {
-        long id = idSequence.incrementAndGet();
         Employee employee = new Employee(
-                id,
                 codeGenerator.nextCode(),
                 utilityService.normalizeName(request.fullName()),
                 utilityService.normalizeName(request.department()),
                 utilityService.normalizeEmail(request.email())
         );
-        employees.put(id, employee);
-        return employee;
+        return employeeRepository.save(employee);
     }
 }
