@@ -84,4 +84,12 @@ public class EmployeeService {
         Employee employee = findById(id);
         employeeRepository.delete(employee);
     }
+
+    public List<Employee> search(String keyword) {
+        return employeeRepository
+                .findByFullNameContainingIgnoreCaseOrDepartmentContainingIgnoreCase(keyword, keyword)
+                .stream()
+                .sorted(Comparator.comparing(Employee::getId))
+                .toList();
+    }
 }
