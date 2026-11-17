@@ -1,0 +1,41 @@
+{
+  "repository_url": "https://github.com/oanha3101/Mini_PJ",
+  "repository_name": "Mini_PJ",
+  "project_path": "",
+  "branch": "P1",
+  "commit_hash": "67a2b8267a785b89fdc88a75ee5d6a00a64790ad",
+  "commit_message": "module 1,2,3,4",
+  "author_email": "chuyenphiemvc@gmail.com",
+  "author_name": "Oanh",
+  "pr_number": null,
+  "score": 100,
+  "total_violations": 0,
+  "error_count": 0,
+  "warning_count": 0,
+  "info_count": 0,
+  "lines_of_code": 0,
+  "files_analyzed": 10,
+  "sunlint_version": "1.3.56",
+  "analysis_duration_ms": 2384,
+  "scoring_mode": "project",
+  "violations": [],
+  "metadata": {
+    "generated_at": "2026-11-16T17:53:11.710Z",
+    "tool": "SunLint",
+    "version": "1.3.56",
+    "analysis_duration_ms": 2384,
+    "scoring_mode": "project"
+  },
+  "quality": {
+    "score": 100,
+    "grade": "A+",
+    "metrics": {
+      "errors": 0,
+      "warnings": 0,
+      "infos": 0,
+      "rulesChecked": 66,
+      "linesOfCode": 0,
+      "violationsPerKLOC": 0
+    }
+  }
+}

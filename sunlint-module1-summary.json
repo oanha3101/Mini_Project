@@ -1,0 +1,41 @@
+{
+  "repository_url": "https://github.com/oanha3101/Mini_Project",
+  "repository_name": "Mini_Project",
+  "project_path": "",
+  "branch": "feature/module_1",
+  "commit_hash": "1851440947b4bf9e4e1f889a27d8589669fe6699",
+  "commit_message": "feat: add Spring Boot hello endpoint",
+  "author_email": "chuyenphiemvc@gmail.com",
+  "author_name": "Oanh",
+  "pr_number": null,
+  "score": 100,
+  "total_violations": 0,
+  "error_count": 0,
+  "warning_count": 0,
+  "info_count": 0,
+  "lines_of_code": 0,
+  "files_analyzed": 2,
+  "sunlint_version": "1.3.56",
+  "analysis_duration_ms": 3609,
+  "scoring_mode": "project",
+  "violations": [],
+  "metadata": {
+    "generated_at": "2026-11-16T18:17:19.723Z",
+    "tool": "SunLint",
+    "version": "1.3.56",
+    "analysis_duration_ms": 3609,
+    "scoring_mode": "project"
+  },
+  "quality": {
+    "score": 100,
+    "grade": "A+",
+    "metrics": {
+      "errors": 0,
+      "warnings": 0,
+      "infos": 0,
+      "rulesChecked": 66,
+      "linesOfCode": 0,
+      "violationsPerKLOC": 0
+    }
+  }
+}

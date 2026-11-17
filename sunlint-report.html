@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SunLint Code Quality Report</title>
+  <style>
+    :root {
+      /* GitHub Dark Theme */
+      --color-canvas-default: #0d1117;
+      --color-canvas-subtle: #161b22;
+      --color-canvas-inset: #010409;
+      --color-border-default: #30363d;
+      --color-border-muted: #21262d;
+
+      --color-fg-default: #e6edf3;
+      --color-fg-muted: #8b949e;
+      --color-fg-subtle: #6e7681;
+
+      --color-accent-fg: #58a6ff;
+      --color-accent-emphasis: #1f6feb;
+      --color-accent-muted: rgba(56, 139, 253, 0.4);
+      --color-accent-subtle: rgba(56, 139, 253, 0.15);
+
+      --color-success-fg: #3fb950;
+      --color-success-emphasis: #238636;
+      --color-success-muted: rgba(46, 160, 67, 0.4);
+      --color-success-subtle: rgba(46, 160, 67, 0.15);
+
+      --color-attention-fg: #d29922;
+      --color-attention-emphasis: #9e6a03;
+      --color-attention-muted: rgba(187, 128, 9, 0.4);
+      --color-attention-subtle: rgba(187, 128, 9, 0.15);
+
+      --color-danger-fg: #f85149;
+      --color-danger-emphasis: #da3633;
+      --color-danger-muted: rgba(248, 81, 73, 0.4);
+      --color-danger-subtle: rgba(248, 81, 73, 0.15);
+
+      --color-done-fg: #a371f7;
+      --color-done-emphasis: #8957e5;
+      --color-done-subtle: rgba(163, 113, 247, 0.15);
+
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+      --radius-1: 6px;
+      --radius-2: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--color-fg-default);
+      background: var(--color-canvas-default);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--color-accent-fg);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 16px 24px;
+    }
+
+    /* Header */
+    .Header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--color-border-default);
+    }
+
+    .Header-brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .Header-brand img {
+      height: 36px;
+    }
+
+    .Header-brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .Header-brand h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-fg-default);
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .Header-brand h1::after {
+      content: 'Report';
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      background: var(--color-accent-subtle);
+      color: var(--color-accent-fg);
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .Header-brand-tagline {
+      font-size: 13px;
+      color: var(--color-fg-muted);
+    }
+
+    .version-sup {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--color-done-fg);
+      background: var(--color-done-subtle);
+      padding: 1px 5px;
+      border-radius: 4px;
+      margin-left: 4px;
+      vertical-align: super;
+    }
+
+    .Header-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--color-fg-muted);
+    }
+
+    .Header-date {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: var(--color-canvas-subtle);
+      border: 1px solid var(--color-border-default);
+      border-radius: 2em;
+    }
+
+    .Header-date svg {
+      opacity: 0.7;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--color-success-fg);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.9); }
+    }
+
+    .Label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 8px;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 22px;
+      border-radius: 2em;
+      white-space: nowrap;
+    }
+
+    .Label--success {
+      color: var(--color-success-fg);
+      background: var(--color-success-subtle);
+      border: 1px solid var(--color-success-muted);
+    }
+
+    .Label--attention {
+      color: var(--color-attention-fg);
+      background: var(--color-attention-subtle);
+      border: 1px solid var(--color-attention-muted);
+    }
+
+    .Label--danger {
+      color: var(--color-danger-fg);
+      background: var(--color-danger-subtle);
+      border: 1px solid var(--color-danger-muted);
+    }
+
+    .Label--accent {
+      color: var(--color-accent-fg);
+      background: var(--color-accent-subtle);
+      border: 1px solid var(--color-accent-muted);
+    }
+
+    .Label--done {
+      color: var(--color-done-fg);
+      background: var(--color-done-subtle);
+      border: 1px solid rgba(163, 113, 247, 0.4);
+    }
+
+    /* Score Overview */
+    .ScoreOverview {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+      padding: 20px;
+      background: var(--color-canvas-subtle);
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-2);
+      margin-bottom: 16px;
+    }
+
+    .ScoreRing {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ScoreRing-circle {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ScoreRing-circle svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: rotate(-90deg);
+    }
+
+    .ScoreRing-circle .track {
+      fill: none;
+      stroke: var(--color-border-default);
+      stroke-width: 8;
+    }
+
+    .ScoreRing-circle .progress {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.6s ease;
+    }
+
+    .ScoreRing-circle .progress.excellent { stroke: var(--color-success-fg); }
+    .ScoreRing-circle .progress.good { stroke: var(--color-attention-fg); }
+    .ScoreRing-circle .progress.poor { stroke: var(--color-danger-fg); }
+
+    .ScoreRing-value {
+      position: relative;
+      text-align: center;
+      z-index: 1;
+    }
+
+    .ScoreRing-number {
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1;
+      color: var(--color-fg-default);
+      font-feature-settings: 'tnum';
+    }
+
+    .ScoreRing-label {
+      font-size: 13px;
+      color: var(--color-fg-muted);
+      margin-top: 2px;
+    }
+
+    .ScoreDetails {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .ScoreDetails-grade {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .GradeBadge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      font-size: 28px;
+      font-weight: 700;
+      border-radius: var(--radius-1);
+    }
+
+    .GradeBadge.excellent {
+      background: var(--color-success-subtle);
+      color: var(--color-success-fg);
+      border: 2px solid var(--color-success-emphasis);
+    }
+
+    .GradeBadge.good {
+      background: var(--color-attention-subtle);
+      color: var(--color-attention-fg);
+      border: 2px solid var(--color-attention-emphasis);
+    }
+
+    .GradeBadge.poor {
+      background: var(--color-danger-subtle);
+      color: var(--color-danger-fg);
+      border: 2px solid var(--color-danger-emphasis);
+    }
+
+    .GradeInfo h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--color-fg-default);
+    }
+
+    .GradeInfo p {
+      font-size: 14px;
+      color: var(--color-fg-muted);
+      margin-top: 2px;
+    }
+
+    .CounterGroup {
+      display: flex;
+      gap: 12px;
+    }
+
+    .Counter {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: var(--color-canvas-default);
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-1);
+    }
+
+    .Counter-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-1);
+      font-size: 18px;
+    }
+
+    .Counter-icon.danger {
+      background: var(--color-danger-subtle);
+      color: var(--color-danger-fg);
+    }
+
+    .Counter-icon.attention {
+      background: var(--color-attention-subtle);
+      color: var(--color-attention-fg);
+    }
+
+    .Counter-icon.accent {
+      background: var(--color-accent-subtle);
+      color: var(--color-accent-fg);
+    }
+
+    .Counter-value {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--color-fg-default);
+      font-feature-settings: 'tnum';
+    }
+
+    .Counter-label {
+      font-size: 12px;
+      color: var(--color-fg-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Git Bar */
+    .GitBar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--color-border-default);
+    }
+
+    .GitBar-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: var(--color-fg-muted);
+      background: var(--color-canvas-default);
+      border: 1px solid var(--color-border-default);
+      border-radius: 2em;
+    }
+
+    .GitBar-item.highlight {
+      font-family: var(--font-mono);
+      color: var(--color-done-fg);
+      background: var(--color-done-subtle);
+      border-color: rgba(163, 113, 247, 0.4);
+    }
+
+    a.GitBar-item {
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    a.GitBar-item:hover {
+      border-color: var(--color-accent-fg);
+      color: var(--color-accent-fg);
+      text-decoration: none;
+    }
+
+    /* Box */
+    .Box {
+      background: var(--color-canvas-subtle);
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-1);
+      margin-bottom: 16px;
+    }
+
+    .Box-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      background: var(--color-canvas-default);
+      border-bottom: 1px solid var(--color-border-default);
+      border-radius: var(--radius-1) var(--radius-1) 0 0;
+    }
+
+    .Box-header h3 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-fg-default);
+    }
+
+    .Box-body {
+      padding: 16px;
+    }
+
+    .Box-row {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--color-border-muted);
+    }
+
+    .Box-row:last-child {
+      border-bottom: none;
+    }
+
+    /* Cards Grid */
+    .CardsGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .Card {
+      background: var(--color-canvas-subtle);
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-1);
+      overflow: hidden;
+    }
+
+    .Card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--color-canvas-default);
+      border-bottom: 1px solid var(--color-border-default);
+    }
+
+    .Card-header-icon {
+      font-size: 16px;
+    }
+
+    .Card-header h4 {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-fg-default);
+    }
+
+    .Card-body {
+      padding: 16px;
+    }
+
+    /* AI Content */
+    .AiContent {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--color-fg-muted);
+    }
+
+    .ai-verdict {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: var(--radius-1);
+      margin-bottom: 16px;
+    }
+
+    .ai-verdict--danger {
+      background: var(--color-danger-subtle);
+      border: 1px solid var(--color-danger-muted);
+    }
+
+    .ai-verdict--warning {
+      background: var(--color-attention-subtle);
+      border: 1px solid var(--color-attention-muted);
+    }
+
+    .ai-verdict--success {
+      background: var(--color-success-subtle);
+      border: 1px solid var(--color-success-muted);
+    }
+
+    .ai-verdict-icon {
+      font-size: 24px;
+    }
+
+    .ai-verdict-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-fg-default);
+    }
+
+    .ai-verdict--danger .ai-verdict-text { color: var(--color-danger-fg); }
+    .ai-verdict--warning .ai-verdict-text { color: var(--color-attention-fg); }
+    .ai-verdict--success .ai-verdict-text { color: var(--color-success-fg); }
+
+    .ai-verdict-desc {
+      font-size: 12px;
+      color: var(--color-fg-muted);
+      margin-left: auto;
+    }
+
+    .AiContent .issue-section,
+    .AiContent .recommendation-section {
+      margin-bottom: 16px;
+    }
+
+    .AiContent .section-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-fg-default);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .AiContent ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .AiContent li {
+      padding: 10px 12px;
+      margin-bottom: 6px;
+      background: var(--color-canvas-default);
+      border-radius: var(--radius-1);
+      border-left: 3px solid var(--color-done-fg);
+    }
+
+    .AiContent .rule-tag {
+      display: inline-block;
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-done-fg);
+      background: var(--color-done-subtle);
+      border-radius: 4px;
+    }
+
+    .AiContent .highlight-error {
+      color: var(--color-danger-fg);
+      font-weight: 600;
+    }
+
+    .AiContent .highlight-warning {
+      color: var(--color-attention-fg);
+    }
+
+    /* Metric */
+    .Metric {
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    .Metric-value {
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1;
+      color: var(--color-fg-default);
+      font-feature-settings: 'tnum';
+    }
+
+    .Metric-value.success { color: var(--color-success-fg); }
+    .Metric-value.attention { color: var(--color-attention-fg); }
+    .Metric-value.danger { color: var(--color-danger-fg); }
+
+    .Metric-label {
+      font-size: 12px;
+      color: var(--color-fg-muted);
+      margin-top: 4px;
+    }
+
+    .ProgressBar {
+      height: 8px;
+      background: var(--color-canvas-default);
+      border-radius: 4px;
+      margin: 16px 0;
+      overflow: hidden;
+    }
+
+    .ProgressBar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.6s ease;
+    }
+
+    .ProgressBar-fill.success { background: var(--color-success-fg); }
+    .ProgressBar-fill.attention { background: var(--color-attention-fg); }
+    .ProgressBar-fill.danger { background: var(--color-danger-fg); }
+
+    .MetricGrid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .MetricGrid-item {
+      text-align: center;
+      padding: 12px;
+      background: var(--color-canvas-default);
+      border-radius: var(--radius-1);
+    }
+
+    .MetricGrid-item .value {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--color-fg-default);
+    }
+
+    .MetricGrid-item .label {
+      font-size: 11px;
+      color: var(--color-fg-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Table */
+    .Table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .Table th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-fg-muted);
+      background: var(--color-canvas-default);
+      border-bottom: 1px solid var(--color-border-default);
+    }
+
+    .Table td {
+      padding: 12px 16px;
+      color: var(--color-fg-default);
+      border-bottom: 1px solid var(--color-border-muted);
+      vertical-align: middle;
+    }
+
+    .Table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .Table tr:hover {
+      background: var(--color-canvas-inset);
+    }
+
+    .SeverityBadge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 2em;
+    }
+
+    .SeverityBadge.error {
+      color: var(--color-danger-fg);
+      background: var(--color-danger-subtle);
+    }
+
+    .SeverityBadge.warning {
+      color: var(--color-attention-fg);
+      background: var(--color-attention-subtle);
+    }
+
+    .RuleId {
+      display: inline-block;
+      padding: 2px 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-accent-fg);
+      background: var(--color-accent-subtle);
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    a.RuleId:hover {
+      background: var(--color-accent-muted);
+      text-decoration: none;
+    }
+
+    /* Tooltip */
+    .Tooltip {
+      position: relative;
+      cursor: help;
+    }
+
+    .Tooltip-content {
+      position: absolute;
+      bottom: calc(100% + 12px);
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 16px;
+      background: var(--color-canvas-default);
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-1);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--color-fg-muted);
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+      z-index: 100;
+    }
+
+    .Tooltip-content::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 8px solid transparent;
+      border-top-color: var(--color-border-default);
+    }
+
+    .Tooltip:hover .Tooltip-content {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .Tooltip-content .formula {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-accent-fg);
+      background: var(--color-accent-subtle);
+      padding: 8px 12px;
+      border-radius: 4px;
+      margin-top: 8px;
+      display: block;
+    }
+
+    .Tooltip-content .title {
+      font-weight: 600;
+      color: var(--color-fg-default);
+      margin-bottom: 4px;
+    }
+
+    .FilePath {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-accent-fg);
+    }
+
+    .LineNumber {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-fg-subtle);
+    }
+
+    .Message {
+      max-width: 500px;
+      color: var(--color-fg-muted);
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    /* Empty State */
+    .EmptyState {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      text-align: center;
+    }
+
+    .EmptyState-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.6;
+    }
+
+    .EmptyState-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-fg-default);
+      margin-bottom: 8px;
+    }
+
+    .EmptyState-desc {
+      font-size: 14px;
+      color: var(--color-fg-muted);
+    }
+
+    /* Endpoints */
+    .EndpointList {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .Endpoint {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      background: var(--color-canvas-default);
+      border-radius: var(--radius-1);
+    }
+
+    .MethodBadge {
+      padding: 2px 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .MethodBadge.get { background: var(--color-accent-subtle); color: var(--color-accent-fg); }
+    .MethodBadge.post { background: var(--color-success-subtle); color: var(--color-success-fg); }
+    .MethodBadge.put { background: var(--color-attention-subtle); color: var(--color-attention-fg); }
+    .MethodBadge.delete { background: var(--color-danger-subtle); color: var(--color-danger-fg); }
+    .MethodBadge.patch { background: var(--color-done-subtle); color: var(--color-done-fg); }
+
+    .EndpointPath {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--color-fg-muted);
+    }
+
+    /* Footer */
+    .Footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      margin-top: 16px;
+      border-top: 1px solid var(--color-border-default);
+      font-size: 12px;
+      color: var(--color-fg-muted);
+    }
+
+    .Footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .Footer-brand img {
+      height: 20px;
+      opacity: 0.6;
+    }
+
+    /* Section Header */
+    .SectionHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      margin-top: 8px;
+    }
+
+    .SectionHeader h2 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-fg-default);
+    }
+
+    .SectionHeader .count {
+      font-size: 12px;
+      color: var(--color-fg-muted);
+      background: var(--color-canvas-subtle);
+      padding: 2px 10px;
+      border-radius: 2em;
+      border: 1px solid var(--color-border-default);
+    }
+
+    /* Tabs */
+    .TabNav {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--color-border-default);
+      background: var(--color-canvas-default);
+      padding: 0 16px;
+    }
+
+    .TabNav-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-fg-muted);
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .TabNav-item:hover {
+      color: var(--color-fg-default);
+      border-bottom-color: var(--color-border-muted);
+    }
+
+    .TabNav-item.selected {
+      color: var(--color-fg-default);
+      border-bottom-color: var(--color-accent-fg);
+    }
+
+    .TabNav-item .Counter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 10px;
+      background: var(--color-canvas-subtle);
+      color: var(--color-fg-muted);
+    }
+
+    .TabNav-item.selected .Counter {
+      background: var(--color-accent-subtle);
+      color: var(--color-accent-fg);
+    }
+
+    .TabNav-item.danger .Counter {
+      background: var(--color-danger-subtle);
+      color: var(--color-danger-fg);
+    }
+
+    .TabNav-item.attention .Counter {
+      background: var(--color-attention-subtle);
+      color: var(--color-attention-fg);
+    }
+
+    .TabPanel {
+      display: none;
+    }
+
+    .TabPanel.active {
+      display: block;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 16px;
+      }
+
+      .Header {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+
+      .ScoreOverview {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .ScoreDetails-grade {
+        justify-content: center;
+      }
+
+      .CounterGroup {
+        flex-direction: column;
+      }
+
+      .GitBar {
+        justify-content: center;
+      }
+
+      .CardsGrid {
+        grid-template-columns: 1fr;
+      }
+
+      .Table {
+        font-size: 12px;
+      }
+
+      .Table th,
+      .Table td {
+        padding: 8px 12px;
+      }
+
+      .Message {
+        max-width: 150px;
+      }
+
+      .Footer {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="Header">
+      <div class="Header-brand">
+        <a href="https://coding-standards.sun-asterisk.vn/">
+          <img src="https://coding-standards.sun-asterisk.vn/logo-light.svg" alt="SunLint">
+        </a>
+        <div class="Header-brand-text">
+          <h1>Code Quality</h1>
+          <span class="Header-brand-tagline">Static Analysis by SunLint<sup class="version-sup">v1.3.56</sup></span>
+        </div>
+      </div>
+      <div class="Header-meta">
+        <span class="Label Label--success">
+          <span class="pulse-dot"></span> Complete
+        </span>
+        <span class="Header-date">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm7-3.25v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5a.75.75 0 0 1 1.5 0Z"/>
+          </svg>
+          00:53:02 17/11/2026
+        </span>
+      </div>
+    </header>
+
+    <!-- Score Overview -->
+    <div class="ScoreOverview">
+      <div class="ScoreRing">
+        <div class="ScoreRing-circle">
+          <svg width="180" height="180" viewBox="0 0 180 180">
+            <circle class="track" cx="90" cy="90" r="80"></circle>
+            <circle class="progress excellent" cx="90" cy="90" r="80"
+              stroke-dasharray="502.65"
+              stroke-dashoffset="calc(502.65 - (502.65 * 100) / 100)">
+            </circle>
+          </svg>
+          <div class="ScoreRing-value Tooltip">
+            <div class="ScoreRing-number">100</div>
+            <div class="ScoreRing-label">out of 100</div>
+            <div class="Tooltip-content">
+              <div class="title">📊 Score Formula</div>
+              <div>Base: 100 points</div>
+              <div>Error penalty: -6 pts/KLOC</div>
+              <div>Warning penalty: -2 pts/KLOC</div>
+              <code class="formula">Score = 100 - (Errors×6 + Warnings×2) / KLOC</code>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ScoreDetails">
+        <div class="ScoreDetails-grade">
+          <div class="GradeBadge excellent">A+</div>
+          <div class="GradeInfo">
+            <h2>🏆 A+ · Excellent</h2>
+            <p>Quality Grade</p>
+          </div>
+        </div>
+
+        <div class="CounterGroup">
+          <div class="Counter">
+            <div class="Counter-icon danger">✕</div>
+            <div>
+              <div class="Counter-value">0</div>
+              <div class="Counter-label">Errors</div>
+            </div>
+          </div>
+          <div class="Counter">
+            <div class="Counter-icon attention">⚠</div>
+            <div>
+              <div class="Counter-value">0</div>
+              <div class="Counter-label">Warnings</div>
+            </div>
+          </div>
+          <div class="Counter">
+            <div class="Counter-icon accent">📁</div>
+            <div>
+              <div class="Counter-value">0</div>
+              <div class="Counter-label">Files</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="GitBar">
+          <a href="https://github.com/oanha3101/Mini_PJ" target="_blank" class="GitBar-item">📦 oanha3101/Mini_PJ</a>
+          <a href="https://github.com/oanha3101/Mini_PJ/tree/P1" target="_blank" class="GitBar-item">🌿 P1</a>
+          <a href="https://github.com/oanha3101/Mini_PJ/commit/67a2b82" target="_blank" class="GitBar-item highlight">67a2b82</a>
+          <span class="GitBar-item">👤 Oanh</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="CardsGrid">
+      <!-- AI Insights -->
+      
+
+      <!-- Architecture -->
+      
+
+      <!-- Impact -->
+      
+    </div>
+
+    <!-- Endpoints -->
+    
+
+    <!-- Violations -->
+    <div class="SectionHeader">
+      <h2>📋 Code Violations</h2>
+      <span class="count">0 issues</span>
+    </div>
+    <div class="Box">
+      
+      
+      <div class="EmptyState">
+        <div class="EmptyState-icon">✅</div>
+        <div class="EmptyState-title">No violations found</div>
+        <div class="EmptyState-desc">Your code passed all quality checks. Great job!</div>
+      </div>
+      
+    </div>
+
+    <!-- Architecture Violations -->
+    
+
+    <!-- Footer -->
+    <footer class="Footer">
+      <div class="Footer-brand">
+        <a href="https://coding-standards.sun-asterisk.vn/">
+          <img src="https://coding-standards.sun-asterisk.vn/logo-light.svg" alt="SunLint">
+        </a>
+        <span>SunLint v1.3.56</span>
+      </div>
+      <div>
+        © 2026 Sun* Engineering Excellence · <a href="https://coding-standards.sun-asterisk.vn/">coding-standards.sun-asterisk.vn</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Tab navigation functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabNav = document.querySelector('.TabNav');
+      if (!tabNav) return;
+
+      const tabs = tabNav.querySelectorAll('.TabNav-item');
+      const table = document.querySelector('.TabPanel table tbody');
+      if (!table) return;
+
+      const allRows = Array.from(table.querySelectorAll('tr'));
+
+      // Filter function
+      function filterRows(filter) {
+        allRows.forEach(row => {
+          const severity = row.dataset.severity;
+
+          if (filter === 'all') {
+            row.style.display = '';
+          } else if (filter === 'errors' && severity === 'error') {
+            row.style.display = '';
+          } else if (filter === 'warnings' && severity === 'warning') {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      }
+
+      // Show errors by default
+      filterRows('errors');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // Update selected state
+          tabs.forEach(t => {
+            t.classList.remove('selected');
+            t.setAttribute('aria-selected', 'false');
+          });
+          this.classList.add('selected');
+          this.setAttribute('aria-selected', 'true');
+
+          // Filter rows based on tab
+          filterRows(this.dataset.tab);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+﻿
+  ☀️  SunLint v1.3.56
+
+  ➜  Rules   66 (C:20 · S:46)
+  ➜  Files   10 targeted
+  ➜  C       C006, C013, C014, C017, C018, C019, C020, C022 +12 more
+  ➜  S       S003, S004, S005, S006, S007, S009, S010, S011 +38 more
+
+  ─────────────────────────────────────────────────────────────
+
+
+  ⚙  Heuristic Engine · 65 rules · 10 files
+
+  ┌─ Batch 1/8 (0%)
+  │  ├─ C006: Function names must be verbs or verb-noun combinations
+  │  ├─ C013: Do not use dead code
+  │  ├─ C014: Use Dependency Injection instead of directly instantiating dependencies
+  │  ├─ C017: Do not put business logic inside constructors
+  │  ├─ C018: Do not throw generic errors; always provide detailed messages
+  │  ├─ C019: Do not use `error` log level for non-critical issues
+  │  ├─ C020: Do not import unused modules or libraries
+  │  ├─ C022: Do not leave unused variables
+  │  ├─ C023: Do not declare duplicate variable names in the same scope, including nested closures
+  │  └─ C024: Do not scatter hardcoded constants throughout the logic
+  └─ ✓ passed · 0.70s
+
+  ┌─ Batch 2/8 (13%)
+  │  ├─ C029: All `catch` blocks must log the root cause of the error
+  │  ├─ C030: Use custom error classes instead of generic system errors
+  │  ├─ C033: Separate processing logic and data access in the service layer
+  │  ├─ C035: Log all relevant context when handling errors
+  │  ├─ C041: Do not hardcode or push sensitive information (token, API key, secret, URL) into the repo
+  │  ├─ C042: Boolean variable names should start with `is`, `has`, or `should`
+  │  ├─ C052: Parsing or data transformation logic must be separated from controllers
+  │  ├─ C060: Do not override superclass methods and ignore critical logic
+  │  ├─ C067: Do not hardcode configuration inside code
+  │  └─ S003: URL redirects must be within an allow list
+  └─ ✓ passed · 0.15s
+
+  ┌─ Batch 3/8 (25%)
+  │  ├─ S004: Do not log login credentials, payment information, and unencrypted tokens
+  │  ├─ S005: Enforce authorization at trusted service layer
+  │  ├─ S006: Do not use default credentials for service authentication
+  │  ├─ S007: Perform output encoding before interpreter use
+  │  ├─ S009: Use only approved cryptographic algorithms, modes, and hash functions
+  │  ├─ S010: Must use cryptographically secure random number generators (CSPRNG) for security purposes
+  │  ├─ S011: Enable Encrypted Client Hello (ECH) for TLS
+  │  ├─ S012: Use secrets management solution for backend secrets
+  │  ├─ S013: Always use TLS for all connections
+  │  └─ S016: Do not pass sensitive data via query string
+  └─ ✓ passed · 0.69s
+
+  ┌─ Batch 4/8 (38%)
+  │  ├─ S017: Always use parameterized queries
+  │  ├─ S019: Sanitize input before sending emails to prevent SMTP Injection
+  │  ├─ S020: Avoid using `eval()` or executing dynamic code
+  │  ├─ S022: Escape data properly based on output context
+  │  ├─ S023: Use output encoding when building dynamic JavaScript/JSON
+  │  ├─ S025: Always validate client-side data on the server
+  │  ├─ S026: Use TLS encryption for all inbound and outbound connections
+  │  ├─ S027: Validate mTLS client certificates before authentication
+  │  ├─ S028: Limit upload file size and number of files per user
+  │  └─ S029: Apply CSRF protection for authentication-related features
+  └─ ✓ passed · 0.11s
+
+  ┌─ Batch 5/8 (50%)
+  │  ├─ S030: Disable directory browsing and protect sensitive metadata files
+  │  ├─ S031: Set the Secure flag on session cookies for HTTPS protection
+  │  ├─ S032: Enable HttpOnly attribute for Session Cookies to prevent JavaScript access
+  │  ├─ S033: Set SameSite attribute for Session Cookies to reduce CSRF risk
+  │  ├─ S034: Use `__Host-` prefix for Session Cookies to prevent subdomain sharing
+  │  ├─ S035: Host separate applications on different hostnames
+  │  ├─ S036: Use internal data for file paths, validate user filenames strictly
+  │  ├─ S037: Set anti-cache headers to prevent sensitive data leakage
+  │  ├─ S039: TLS clients must validate server certificates
+  │  └─ S041: Session Tokens must be invalidated after logout or expiration
+  └─ ✓ passed · 0.10s
+
+  ┌─ Batch 6/8 (63%)
+  │  ├─ S042: Require re-authentication for long-lived sessions or sensitive actions
+  │  ├─ S044: Require re-authentication before modifying critical information
+  │  ├─ S045: Implement brute-force protection for login
+  │  ├─ S047: Protect OAuth code flow against CSRF attacks
+  │  ├─ S048: Validate OAuth redirect URIs with exact string comparison
+  │  ├─ S049: Authentication codes must expire quickly
+  │  ├─ S050: Reference tokens must be unique with 128-bit entropy using CSPRNG
+  │  ├─ S051: Support 12–64 character passwords; reject >128 characters
+  │  ├─ S052: OTPs must have at least 20-bit entropy
+  │  └─ S053: Return generic error messages, hide internal details
+  └─ ✓ passed · 0.08s
+
+  ┌─ Batch 7/8 (75%)
+  │  ├─ S054: Avoid using default accounts like "admin", "root", "sa"
+  │  ├─ S055: Validate input Content-Type in REST services
+  │  ├─ S056: Protect against Log Injection attacks
+  │  ├─ S057: Use synchronized time and UTC in logs
+  │  └─ S058: Protect applications from SSRF attacks
+  └─ ✓ passed · 0.04s
+
+  ⚙  ESLint Engine · 1 rules · 10 files
+
+  ┌─ Batch 8/8 (88%)
+  │  └─ C032: Do not call external APIs in constructors or static blocks
+  └─ ✓ passed · 0.00s
+
+  ─────────────────────────────────────────────────────────────
+
+  ✓ All checks passed · 1.9s
+
+
+
