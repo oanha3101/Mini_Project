@@ -3,6 +3,7 @@ package com.example.employeemanagement.controller;
 import com.example.employeemanagement.dto.CreateEmployeeRequest;
 import com.example.employeemanagement.dto.UpdateEmployeeRequest;
 import com.example.employeemanagement.model.Employee;
+import com.example.employeemanagement.service.EmployeeReportService;
 import com.example.employeemanagement.service.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,12 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final EmployeeReportService employeeReportService;
 
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService,
+                              EmployeeReportService employeeReportService) {
         this.employeeService = employeeService;
+        this.employeeReportService = employeeReportService;
     }
 
     @GetMapping
@@ -60,5 +64,10 @@ public class EmployeeController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         employeeService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/report/count")
+    public ResponseEntity<Long> getEmployeeCount() {
+        return ResponseEntity.ok(employeeReportService.getTotalEmployeeCount());
     }
 }
