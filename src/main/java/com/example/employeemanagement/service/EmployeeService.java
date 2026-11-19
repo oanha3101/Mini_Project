@@ -1,6 +1,7 @@
 package com.example.employeemanagement.service;
 
 import com.example.employeemanagement.dto.CreateEmployeeRequest;
+import com.example.employeemanagement.dto.DepartmentStatistics;
 import com.example.employeemanagement.dto.UpdateEmployeeRequest;
 import com.example.employeemanagement.exception.DuplicateResourceException;
 import com.example.employeemanagement.exception.ResourceNotFoundException;
@@ -116,5 +117,13 @@ public class EmployeeService {
                 .toList();
         log.debug("Search returned {} results for keyword: {}", results.size(), keyword);
         return results;
+    }
+
+    public List<DepartmentStatistics> getEmployeesByDepartment() {
+        return employeeRepository.countByDepartment();
+    }
+
+    public long getTotalEmployeeCount() {
+        return employeeRepository.countTotal();
     }
 }

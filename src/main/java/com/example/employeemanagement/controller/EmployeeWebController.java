@@ -1,6 +1,7 @@
 package com.example.employeemanagement.controller;
 
 import com.example.employeemanagement.dto.CreateEmployeeRequest;
+import com.example.employeemanagement.dto.DepartmentStatistics;
 import com.example.employeemanagement.model.Employee;
 import com.example.employeemanagement.service.EmployeeService;
 import jakarta.validation.Valid;
@@ -66,5 +67,14 @@ public class EmployeeWebController {
             model.addAttribute("keyword", keyword);
         }
         return "employees/search";
+    }
+
+    @GetMapping("/statistics")
+    public String statistics(Model model) {
+        List<DepartmentStatistics> byDepartment = employeeService.getEmployeesByDepartment();
+        long total = employeeService.getTotalEmployeeCount();
+        model.addAttribute("byDepartment", byDepartment);
+        model.addAttribute("total", total);
+        return "employees/statistics";
     }
 }
